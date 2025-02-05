@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction} from 'express';
 import { getById, find } from './product.service';
+import { TypedRequest } from '../../lib/typed-request.interface';
+import { QueryProductsDTO } from './product.dto';
 
-export const list = async (req: Request, res: Response, next: NextFunction) => {
-    let name = req.query['name'] as string;
-    let minPrice: number = req.query['minPrice'] ?
-        parseFloat(req.query['minPrice'] as string)
-        : 0;
+export const list = async (
+    req: TypedRequest<unknown, QueryProductsDTO>,
+    res: Response,
+    next: NextFunction) => {
 
-    const filtered = await find({name, minPrice});
+    const filtered = await find(req.query);
 
     res.json(filtered);
 }

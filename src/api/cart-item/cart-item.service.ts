@@ -1,4 +1,3 @@
-import { Product } from "../product/product.entity";
 import { getById } from "../product/product.service";
 import { CartItem, PopulatedCartItem } from "./cart-item.entity";
 

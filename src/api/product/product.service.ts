@@ -1,11 +1,9 @@
 import { Product } from "./product.entity";
 import productsImport from '../../../products.json';
+import { QueryProductsDTO } from "./product.dto";
 const products: Product[] = productsImport;
 
-export type ProductQuery = {
-    name: string;
-    minPrice: number;
-}
+export type ProductQuery = QueryProductsDTO;
 
 export async function find(query: Partial<ProductQuery>): Promise<Product[]> {
     return products.filter(p => {
