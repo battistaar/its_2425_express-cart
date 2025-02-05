@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction} from 'express';
-import { getById, list as listProducts } from './product.service';
+import { getById, find } from './product.service';
 
 export const list = async (req: Request, res: Response, next: NextFunction) => {
     let name = req.query['name'] as string;
@@ -7,7 +7,7 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
         parseFloat(req.query['minPrice'] as string)
         : 0;
 
-    const filtered = await listProducts({name, minPrice});
+    const filtered = await find({name, minPrice});
 
     res.json(filtered);
 }

@@ -7,7 +7,7 @@ export type ProductQuery = {
     minPrice: number;
 }
 
-export async function list(query: Partial<ProductQuery>): Promise<Product[]> {
+export async function find(query: Partial<ProductQuery>): Promise<Product[]> {
     return products.filter(p => {
         let match = true;
         if (query.name) {
