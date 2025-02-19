@@ -9,4 +9,12 @@ const productSchema = new Schema<Product>({
     discount: Number
 });
 
+productSchema.set('toJSON', {
+    virtuals: true,
+    transform: (_, ret) => {
+        delete ret._id;
+        return ret;
+    }
+});
+
 export const ProductModel = model<Product>('Product', productSchema);

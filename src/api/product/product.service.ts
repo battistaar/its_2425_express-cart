@@ -7,7 +7,25 @@ import { ProductModel } from "./product.model";
 export type ProductQuery = QueryProductsDTO;
 
 export async function find(query: Partial<ProductQuery>): Promise<Product[]> {
-    const products = await ProductModel.find();
+    const q: any = {};
+    if (query.name) {
+        q.name = {$regex: query.name, $options: 'i'}
+    }
+
+    if (query.minPrice !== undefined ||
+        query.maxPrice !== undefined) {
+        q.netPrice = {};
+    }
+
+    if (query.minPrice !== undefined) {
+        q.netPrice['$gte'] = query.minPrice;
+    }
+
+    if (query.maxPrice !== undefined) {
+        q.netPrice['$lte'] = query.maxPrice;
+    }
+
+    const products = await ProductModel.find(q);
     return products;
     // return products.filter(p => {
     //     let match = true;
