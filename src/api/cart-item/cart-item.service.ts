@@ -1,29 +1,12 @@
-import { getById } from "../product/product.service";
-import { CartItem, PopulatedCartItem } from "./cart-item.entity";
-
-const cart: CartItem[] = [];
+import { CartItem } from "./cart-item.entity";
+import { CartItemModel } from "./cart-item.model";
 
 export async function addToCart(data: CartItem): Promise<CartItem> {
-    cart.push(data);
-    return data;
+    const newItem = await CartItemModel.create(data);
+    await newItem.populate('product');
+    return newItem;
 }
 
 export async function getCart(): Promise<CartItem[]> {
-    return cart;
-}
-
-export async function populateCartItem(source: CartItem): Promise<PopulatedCartItem>;
-export async function populateCartItem(source: CartItem[]): Promise<PopulatedCartItem[]>;
-export async function populateCartItem(source: CartItem | CartItem[]) {
-    if (Array.isArray(source)) {
-        const promises = source.map(c => populateCartItem(c));
-        return Promise.all(promises);
-    }
-
-    const productId = source.product;
-    const product = await getById(productId);
-    return {
-        ...source,
-        product
-    };
+    return CartItemModel.find().populate('product');
 }
