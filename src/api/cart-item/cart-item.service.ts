@@ -17,3 +17,20 @@ export async function addToCart(data: CartItem): Promise<CartItem> {
 export async function getCart(): Promise<CartItem[]> {
     return CartItemModel.find().populate('product');
 }
+
+export async function updateQuantity(id: string, quantity: number): Promise<CartItem | null> {
+    const item = await CartItemModel.findById(id);
+    if (!item) {
+        return null;
+    }
+    item.quantity = quantity;
+    await item.save();
+    return item;
+}
+
+
+export async function update(id: string, data: Partial<CartItem>): Promise<CartItem | null> {
+    const updated = await CartItemModel.findByIdAndUpdate(id, data, {new: true}).populate('product');
+
+    return updated;
+}
