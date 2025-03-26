@@ -34,3 +34,7 @@ export async function update(id: string, data: Partial<CartItem>): Promise<CartI
 
     return updated;
 }
+
+export async function removeFromCart(id: string): Promise<CartItem | null> {
+    return CartItemModel.findByIdAndDelete(id);
+}
