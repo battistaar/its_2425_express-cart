@@ -1,3 +1,4 @@
+import { ValidationError } from './../../errors/validation';
 import { Request, Response, NextFunction } from 'express';
 import { getById } from '../product/product.service';
 import { CartItem } from './cart-item.entity';
@@ -13,6 +14,15 @@ export const add = async (
     res: Response, 
     next: NextFunction) => {
     try {
+        const data = plainToClass(AddCartItemDTO, req.body);
+        const errors = await validate(data);
+
+        if(errors.length) {
+            console.log(errors);
+            next(new ValidationError(errors));
+            return;
+        }
+
         const { productId, quantity } = req.body;
 
         const product = await getById(productId);
@@ -56,7 +66,7 @@ export const updateQuantity = async (
 
         if(errors.length) {
             console.log(errors);
-            next(errors);
+            next(new ValidationError(errors));
             return;
         }
 
