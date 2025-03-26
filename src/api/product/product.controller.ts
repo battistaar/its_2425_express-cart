@@ -8,7 +8,7 @@ export const list = async (
     req: TypedRequest<unknown, QueryProductsDTO>,
     res: Response,
     next: NextFunction) => {
-    
+    console.log(req.query);
     try {
         const filtered = await find(req.query);
 
