@@ -5,6 +5,7 @@ import userSrv, { UserExistsError } from "../user/user.service";
 import { omit, pick } from "lodash";
 import passport from "passport";
 import jwt from 'jsonwebtoken';
+import { JWT_SECRET } from "../../lib/auth/jwt/jwt-strategy";
 
 export const add = async (
     req: TypedRequest<AddUserDTO>,
@@ -50,7 +51,7 @@ export const login = async (
                 });
                 return;
             }
-            const token = jwt.sign(user, 'my_jwt_secret', { expiresIn: '7 days' });
+            const token = jwt.sign(user, JWT_SECRET, { expiresIn: '7 days' });
             res.status(200);
             res.json({
                 user,
