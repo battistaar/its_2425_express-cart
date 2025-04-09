@@ -16,6 +16,15 @@ userSchema.set('toJSON', {
     }
 });
 
+userSchema.set('toObject', {
+    virtuals: true,
+    transform: (_, ret) => {
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+    }
+});
+
 userSchema.virtual('fullName').get(function() {
     return `${this.firstName} ${this.lastName}`;
 })

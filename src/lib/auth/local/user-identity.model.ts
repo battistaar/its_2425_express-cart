@@ -13,4 +13,9 @@ const userIdentitySchema = new Schema<UserIdentity>({
     }
 });
 
+userIdentitySchema.pre('findOne', function(next) {
+    this.populate('user');
+    next();
+})
+
 export const UserIdentityModel = model<UserIdentity>('UserIdentity', userIdentitySchema);

@@ -4,6 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import apiRouter from './api/routes';
 import { errorHandlers } from './errors';
+import './lib/auth/auth.handlers';
 
 const app = express();
 
