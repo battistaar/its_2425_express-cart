@@ -2,7 +2,7 @@ import { CartItem } from "./cart-item.entity";
 import { CartItemModel } from "./cart-item.model";
 
 export async function addToCart(data: CartItem): Promise<CartItem> {
-    const existing = await CartItemModel.findOne({product: data.product});
+    const existing = await CartItemModel.findOne({ product: data.product, user: data.user });
     if (!!existing) {
         existing.quantity += data.quantity;
         await existing.save();
@@ -14,27 +14,16 @@ export async function addToCart(data: CartItem): Promise<CartItem> {
 }
 
 
-export async function getCart(): Promise<CartItem[]> {
-    return CartItemModel.find().populate('product');
+export async function getCart(userId: string): Promise<CartItem[]> {
+    return CartItemModel.find({ user: userId }).populate('product');
 }
 
-export async function updateQuantity(id: string, quantity: number): Promise<CartItem | null> {
-    const item = await CartItemModel.findById(id);
-    if (!item) {
-        return null;
-    }
-    item.quantity = quantity;
-    await item.save();
-    return item;
-}
-
-
-export async function update(id: string, data: Partial<CartItem>): Promise<CartItem | null> {
-    const updated = await CartItemModel.findByIdAndUpdate(id, data, {new: true}).populate('product');
+export async function update(id: string, data: Partial<CartItem>, userId: string): Promise<CartItem | null> {
+    const updated = await CartItemModel.findOneAndUpdate({ _id: id, user: userId }, data, {new: true}).populate('product');
 
     return updated;
 }
 
-export async function removeFromCart(id: string): Promise<CartItem | null> {
-    return CartItemModel.findByIdAndDelete(id);
+export async function removeFromCart(id: string, userId: string): Promise<CartItem | null> {
+    return CartItemModel.findOneAndDelete({ _id: id, user: userId });
 }

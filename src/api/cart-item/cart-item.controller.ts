@@ -6,12 +6,14 @@ import { TypedRequest } from '../../lib/typed-request.interface';
 import { AddCartItemDTO, UpdateCartQuantityDTO } from './cart-item.dto';
 import { NotFoundError } from '../../errors/not-found.error';
 
+
 export const add = async (
     req: TypedRequest<AddCartItemDTO>, 
     res: Response, 
     next: NextFunction) => {
     try {
         const { productId, quantity } = req.body;
+        const userId = req.user?.id!;
 
         const product = await getById(productId);
         if (!product) {
@@ -20,7 +22,8 @@ export const add = async (
 
         const toAdd: CartItem = {
             product: productId,
-            quantity
+            quantity,
+            user: userId
         };
         
         const added = await addToCart(toAdd);
@@ -35,7 +38,8 @@ export const add = async (
 
 export const list = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const cart = await getCart();
+        const userId = req.user?.id!;
+        const cart = await getCart(userId);
 
         res.json(cart);
     } catch(err) {
@@ -50,8 +54,9 @@ export const updateQuantity = async (
     try {
         const { id } = req.params;
         const { quantity } = req.body;
+        const userId = req.user?.id!;
 
-        const updated = await update(id, { quantity });
+        const updated = await update(id, { quantity }, userId);
         if (!updated) {
             throw new NotFoundError();
         }
@@ -67,8 +72,9 @@ export const remove = async (
     next: NextFunction) => {
     try {
         const { id } = req.params;
+        const userId = req.user?.id!;
 
-        const removed = await removeFromCart(id);
+        const removed = await removeFromCart(id, userId);
         if (!removed) {
             throw new NotFoundError();
         }
