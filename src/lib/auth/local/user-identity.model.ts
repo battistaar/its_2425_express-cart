@@ -10,7 +10,8 @@ const userIdentitySchema = new Schema<UserIdentity>({
             hashedPassword: String
         },
         _id: false
-    }
+    },
+    refreshToken: [String]
 });
 
 userIdentitySchema.pre('findOne', function(next) {

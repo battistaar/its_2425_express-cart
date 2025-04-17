@@ -7,5 +7,6 @@ export type UserIdentity = {
         username: string,
         hashedPassword: string
     },
-    user: User
+    user: User,
+    refreshToken?: string[]
 }
